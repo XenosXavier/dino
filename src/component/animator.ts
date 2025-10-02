@@ -1,4 +1,4 @@
-import Animation from "./animation";
+import Animation, { Frame } from "./animation";
 
 export default class Animator<T extends string> {
   private animations: Record<T, Animation>;
@@ -17,7 +17,7 @@ export default class Animator<T extends string> {
     this.animation.update(deltaTime);
   }
 
-  public getFrame(): HTMLImageElement {
+  public getFrame(): Frame {
     return this.animation.getFrame();
   }
 }

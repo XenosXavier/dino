@@ -1,6 +1,6 @@
 type keyboardHandler = (event: KeyboardEvent) => void;
 
-export default class Input {
+export default class InputSystem {
   public onKey?: keyboardHandler | null;
 
   public constructor() {

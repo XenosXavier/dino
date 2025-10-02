@@ -1,5 +1,5 @@
-import Collider from "../../../../component/collider";
 import { GravityMode } from "../../../../component/rigidbody";
+import GameObject from "../../../game-object";
 import Track from "../../ground/track";
 import Bird from "../../obstacle/bird";
 import Cactus from "../../obstacle/cactus";
@@ -23,17 +23,11 @@ export default class JumpState extends DinoState {
     this.dino.rigidbody.setGravityMode(GravityMode.None);
   }
 
-  public override handleCollision(other: Collider): void {
-    if (
-      other.gameObject instanceof Cactus ||
-      other.gameObject instanceof Bird
-    ) {
+  public override handleCollision(gameObject: GameObject): void {
+    if (gameObject instanceof Cactus || gameObject instanceof Bird) {
       this.dino.stateMachine.setState(StateName.Dead);
-    } else if (
-      other.gameObject instanceof Track &&
-      this.dino.y > other.gameObject.y
-    ) {
-      this.dino.y = other.gameObject.y;
+    } else if (gameObject instanceof Track && this.dino.y > gameObject.y) {
+      this.dino.y = gameObject.y;
       this.dino.rigidbody.setVelocity(0, 0);
       const name =
         GravityMode.Normal === this.dino.rigidbody.gravityMode

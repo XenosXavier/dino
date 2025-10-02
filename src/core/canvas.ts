@@ -42,6 +42,7 @@ export default class Canvas {
   }
 
   public drawRect(x: number, y: number, width: number, height: number): void {
-    this.context.strokeRect(x, y, width, height);
+    this.context.fillStyle = "red";
+    this.context.fillRect(x, y, width, height);
   }
 }

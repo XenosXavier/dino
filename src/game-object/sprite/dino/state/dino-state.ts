@@ -1,5 +1,6 @@
 import Collider from "../../../../component/collider";
 import { State } from "../../../../component/state-machine";
+import GameObject from "../../../game-object";
 import Dino, { Command } from "../dino";
 
 export default abstract class DinoState implements State {
@@ -17,5 +18,5 @@ export default abstract class DinoState implements State {
 
   public handleCommand?(command: Command): void;
 
-  public handleCollision?(other: Collider): void;
+  public handleCollision?(gameObject: GameObject): void;
 }

@@ -1,14 +1,11 @@
 import GameObject from "../game-object/game-object";
 
-type CollisionHandler = (other: Collider) => void;
-
 export default class Collider {
   public gameObject: GameObject;
   private x: number;
   private y: number;
   private width: number;
   private height: number;
-  private handler?: CollisionHandler;
 
   public constructor(
     gameObject: GameObject,
@@ -40,27 +37,7 @@ export default class Collider {
     return this.gameObject.y + this.y;
   }
 
-  public setPosition(x: number, y: number): void {
-    this.x = x;
-    this.y = y;
-  }
-
-  public setSize(width: number, height: number): void {
-    this.width = width;
-    this.height = height;
-  }
-
-  public setCollisionHandler(handler: CollisionHandler): void {
-    this.handler = handler;
-  }
-
-  public checkCollision(other: Collider): void {
-    if (this.isCollosion(other)) {
-      this.handler?.(other);
-    }
-  }
-
-  private isCollosion(other: Collider): boolean {
+  public isCollision(other: Collider): boolean {
     return !(
       this.left > other.right ||
       this.right < other.left ||

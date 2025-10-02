@@ -1,6 +1,7 @@
 import { SceneName } from "../core/game";
 import Dino, { Command } from "../game-object/sprite/dino/dino";
 import Track from "../game-object/sprite/ground/track";
+import Cactus from "../game-object/sprite/obstacle/cactus";
 import Curtain from "../game-object/sprite/ui/curtain";
 import Scene from "./scene";
 
@@ -10,7 +11,10 @@ export default class IdleScene extends Scene {
   private curtain!: Curtain;
 
   public override load(): void {
-    this.dino = this.game.pool.get("dino", () => new Dino(this.game.assets));
+    this.dino = this.game.pool.get(
+      "dino",
+      () => new Dino(this.game.assets, this.game.config)
+    );
     this.tracks = this.game.pool.get("tracks", () => [
       new Track(this.game.assets),
       new Track(this.game.assets),
@@ -19,7 +23,7 @@ export default class IdleScene extends Scene {
   }
 
   public override init(): void {
-    this.game.input.onKey = this.handleInput;
+    this.game.inputSystem.onKey = this.handleInput;
     this.dino.onGround = this.transition;
     this.tracks.forEach((track) => track.rigidbody.setVelocity(0, 0));
   }
@@ -38,7 +42,7 @@ export default class IdleScene extends Scene {
     }
 
     this.updateGameObjects(deltaTime);
-    this.checkCollision();
+    this.checkGameObjectCollision();
     this.renderGameObjects();
   }
 
@@ -48,17 +52,18 @@ export default class IdleScene extends Scene {
     );
   }
 
-  private checkCollision(): void {
-    [...this.tracks].forEach((gameObject) => {
-      this.dino.collider.checkCollision(gameObject.collider);
-    });
+  private checkGameObjectCollision(): void {
+    this.game.collisionSystem.checkCollision(
+      this.dino,
+      this.tracks,
+      (dino, gameObject) => {
+        dino.handleCollision(gameObject);
+      }
+    );
   }
 
   private renderGameObjects(): void {
-    this.game.canvas.clear();
-    [...this.tracks, this.curtain, this.dino].forEach((gameObject) =>
-      this.game.renderer.render(gameObject, this.game.canvas)
-    );
+    this.game.renderSystem.render([...this.tracks, this.curtain, this.dino]);
   }
 
   private handleInput = (e: KeyboardEvent): void => {
@@ -68,7 +73,7 @@ export default class IdleScene extends Scene {
   };
 
   private transition = (): void => {
-    this.game.input.onKey = null;
+    this.game.inputSystem.onKey = null;
     this.dino.rigidbody.setVelocity(52, 0);
     this.curtain.rigidbody.setVelocity(1000, 0);
   };

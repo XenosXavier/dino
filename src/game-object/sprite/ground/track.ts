@@ -5,14 +5,22 @@ import Sprite from "../sprite";
 
 export default class Track extends Sprite {
   private image: HTMLImageElement;
-  public collider: Collider;
+  private bounds: Collider;
   public rigidbody: Rigidbody;
 
   public constructor(assets: Assets) {
     super();
     this.image = assets.getImage("track");
-    this.collider = new Collider(this, 0, 0, this.width, this.height);
+    this.bounds = new Collider(this, 0, 0, this.width, this.height);
     this.rigidbody = new Rigidbody(this, GravityMode.None);
+  }
+
+  public getBounds(): Collider {
+    return this.bounds;
+  }
+
+  public getHitboxes(): Collider[] {
+    return [this.bounds];
   }
 
   public override update(deltaTime: number): void {

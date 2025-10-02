@@ -16,7 +16,10 @@ export default class PlayScene extends Scene {
   private scoreboard!: Scoreboard;
 
   public override load(): void {
-    this.dino = this.game.pool.get("dino", () => new Dino(this.game.assets));
+    this.dino = this.game.pool.get(
+      "dino",
+      () => new Dino(this.game.assets, this.game.config)
+    );
     this.tracks = this.game.pool.get("tracks", () => [
       new Track(this.game.assets),
       new Track(this.game.assets),
@@ -26,7 +29,7 @@ export default class PlayScene extends Scene {
   }
 
   public override init(): void {
-    this.game.input.onKey = this.handleInput;
+    this.game.inputSystem.onKey = this.handleInput;
     this.spawnElapsedTime = 0;
     this.speed = 1;
     this.dino.reset();
@@ -75,7 +78,7 @@ export default class PlayScene extends Scene {
     if (this.spawnElapsedTime > this.spawnInterval) {
       this.spawnElapsedTime %= this.spawnInterval;
 
-      if (this.scoreboard.getCurrentScore() > 500 && Math.random() * 100 > 70) {
+      if (this.scoreboard.getCurrentScore() > 200 && Math.random() * 100 > 50) {
         this.spawnBird();
       } else {
         this.spawnCactus();
@@ -84,15 +87,15 @@ export default class PlayScene extends Scene {
   }
 
   private spawnCactus(): void {
-    const cactus = new Cactus(this.game.assets);
+    const cactus = new Cactus(this.game.assets, this.game.config);
     cactus.setPosition(1000, 150);
     cactus.rigidbody.setVelocity(-300, 0);
     this.obstacles.push(cactus);
   }
 
   private spawnBird(): void {
-    const y = Math.floor(Math.random() * 3 + 2) * 35;
-    const bird = new Bird(this.game.assets);
+    const y = Math.floor(Math.random() * 3) * 20 + 100;
+    const bird = new Bird(this.game.assets, this.game.config);
     bird.setPosition(1000, y);
     bird.rigidbody.setVelocity(-400, 0);
     this.obstacles.push(bird);
@@ -105,16 +108,22 @@ export default class PlayScene extends Scene {
   }
 
   private checkCollision(): void {
-    [...this.tracks, ...this.obstacles].forEach((gameObject) => {
-      this.dino.collider.checkCollision(gameObject.collider);
-    });
+    this.game.collisionSystem.checkCollision(
+      this.dino,
+      [...this.tracks, ...this.obstacles],
+      (dino, gameObject) => {
+        dino.handleCollision(gameObject);
+      }
+    );
   }
 
   private renderGameObjects(): void {
-    this.game.canvas.clear();
-    [...this.tracks, ...this.obstacles, this.scoreboard, this.dino].forEach(
-      (gameObject) => this.game.renderer.render(gameObject, this.game.canvas)
-    );
+    this.game.renderSystem.render([
+      ...this.tracks,
+      ...this.obstacles,
+      this.scoreboard,
+      this.dino,
+    ]);
   }
 
   private handleInput = (e: KeyboardEvent): void => {

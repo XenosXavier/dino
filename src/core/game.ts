@@ -1,13 +1,15 @@
 import Assets from "../resource/assets";
+import Config from "../resource/config";
 import Pool from "../resource/pool";
 import IdleScene from "../scene/idle-scene";
 import LoadScene from "../scene/load-scene";
 import OverScene from "../scene/over-scene";
 import PlayScene from "../scene/play-scene";
 import Scene from "../scene/scene";
+import CollisionSystem from "../system/collision-system";
+import RenderSystem from "../system/render-system";
 import Canvas from "./canvas";
-import Input from "./input";
-import Renderer from "./renderer";
+import InputSystem from "../system/input-system";
 
 export enum SceneName {
   Load = "Load",
@@ -22,9 +24,11 @@ export default class Game {
   public height: number;
   public assets: Assets;
   public pool: Pool;
+  public config: Config;
   public canvas: Canvas;
-  public input: Input;
-  public renderer: Renderer;
+  public inputSystem: InputSystem;
+  public collisionSystem: CollisionSystem;
+  public renderSystem: RenderSystem;
   public scenes: Record<SceneName, Scene>;
   public scene!: Scene;
 
@@ -34,9 +38,11 @@ export default class Game {
     this.height = height;
     this.assets = new Assets();
     this.pool = new Pool();
+    this.config = new Config();
     this.canvas = new Canvas(canvas, width, height);
-    this.input = new Input();
-    this.renderer = new Renderer();
+    this.inputSystem = new InputSystem();
+    this.collisionSystem = new CollisionSystem();
+    this.renderSystem = new RenderSystem(this);
     this.scenes = this.createScenes();
     this.setScene(SceneName.Load);
   }

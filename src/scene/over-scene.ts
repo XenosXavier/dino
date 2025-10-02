@@ -17,7 +17,10 @@ export default class OverScene extends Scene {
   private restartIcon!: RestartIcon;
 
   public override load(): void {
-    this.dino = this.game.pool.get("dino", () => new Dino(this.game.assets));
+    this.dino = this.game.pool.get(
+      "dino",
+      () => new Dino(this.game.assets, this.game.config)
+    );
     this.tracks = this.game.pool.get("tracks", () => [
       new Track(this.game.assets),
       new Track(this.game.assets),
@@ -32,7 +35,7 @@ export default class OverScene extends Scene {
   }
 
   public override init(): void {
-    this.game.input.onKey = this.handleInput;
+    this.game.inputSystem.onKey = this.handleInput;
   }
 
   public override build(): void {
@@ -48,17 +51,14 @@ export default class OverScene extends Scene {
   }
 
   private renderGameObjects(): void {
-    this.game.canvas.clear();
-    [
+    this.game.renderSystem.render([
       ...this.tracks,
       ...this.obstacles,
       this.scoreboard,
       this.dino,
       this.overTitle,
       this.restartIcon,
-    ].forEach((gameObject) =>
-      this.game.renderer.render(gameObject, this.game.canvas)
-    );
+    ]);
   }
 
   private handleInput = (event: KeyboardEvent): void => {
