@@ -1,4 +1,5 @@
 import Collider from "../component/collider";
+import CollisionBody from "../component/collision-body";
 import Game from "../core/game";
 import GameObject from "../game-object/game-object";
 import Sprite from "../game-object/sprite/sprite";
@@ -7,11 +8,6 @@ import UIText from "../game-object/uitext/uitext";
 export enum RenderMode {
   Play,
   Debug,
-}
-
-interface Collidable {
-  getBounds(): Collider;
-  getHitboxes(): Collider[];
 }
 
 export default class RenderSystem {
@@ -35,11 +31,12 @@ export default class RenderSystem {
 
       if (
         RenderMode.Debug === this.renderMode &&
-        this.isCollidable(gameObject)
+        undefined !== gameObject.getComponent(CollisionBody)
       ) {
-        (gameObject as unknown as Collidable)
-          .getHitboxes()
-          .forEach((box) => this.renderCollider(box));
+        const collisionBody = gameObject.getComponent(CollisionBody);
+        collisionBody
+          ?.getHitboxes()
+          .forEach((hitbox) => this.renderCollider(hitbox));
       }
     });
   }
@@ -65,18 +62,6 @@ export default class RenderSystem {
       collider.top,
       collider.right - collider.left,
       collider.bottom - collider.top
-    );
-  }
-
-  /**
-   * DOTO: Use the other way to render collider
-   */
-  private isCollidable(obj: any): boolean {
-    return (
-      obj !== null &&
-      typeof obj === "object" &&
-      typeof obj.getBounds === "function" &&
-      typeof obj.getHitboxes === "function"
     );
   }
 }

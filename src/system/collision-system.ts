@@ -1,17 +1,13 @@
-import Collider from "../component/collider";
+import CollisionBody from "../component/collision-body";
+import GameObject from "../game-object/game-object";
 
-interface Collidable {
-  getBounds(): Collider;
-  getHitboxes(): Collider[];
-}
-
-type OnCollision<Source extends Collidable, Target extends Collidable> = (
+type OnCollision<Source extends GameObject, Target extends GameObject> = (
   source: Source,
   target: Target
 ) => void;
 
 export default class CollisionSystem {
-  public checkCollision<Source extends Collidable, Target extends Collidable>(
+  public checkCollision<Source extends GameObject, Target extends GameObject>(
     source: Source,
     targets: Target[],
     onCollision?: OnCollision<Source, Target>
@@ -26,24 +22,39 @@ export default class CollisionSystem {
     });
   }
 
-  private isBroadPhaseCollision(
-    source: Collidable,
-    target: Collidable
+  public isBroadPhaseCollision(
+    source: GameObject,
+    target: GameObject
   ): boolean {
-    return source.getBounds().isCollision(target.getBounds());
+    const sourceCollisionBody = source.getComponent(CollisionBody);
+    const targetCollisionBody = target.getComponent(CollisionBody);
+
+    return (
+      sourceCollisionBody !== undefined &&
+      targetCollisionBody !== undefined &&
+      sourceCollisionBody
+        .getBounds()
+        .isCollision(targetCollisionBody.getBounds())
+    );
   }
 
-  private isNarrowPhaseCollision(
-    source: Collidable,
-    target: Collidable
+  public isNarrowPhaseCollision(
+    source: GameObject,
+    target: GameObject
   ): boolean {
-    const sourceHitboxes = source.getHitboxes();
-    const targetHitboxes = target.getHitboxes();
+    const sourceCollisionBody = source.getComponent(CollisionBody);
+    const targetCollisionBody = target.getComponent(CollisionBody);
 
-    return sourceHitboxes.some((sourceHitbox) =>
-      targetHitboxes.some((targetHitbox) =>
-        sourceHitbox.isCollision(targetHitbox)
-      )
+    return (
+      sourceCollisionBody !== undefined &&
+      targetCollisionBody !== undefined &&
+      sourceCollisionBody
+        .getHitboxes()
+        .some((sourceHitbox) =>
+          targetCollisionBody
+            .getHitboxes()
+            .some((targetHitbox) => sourceHitbox.isCollision(targetHitbox))
+        )
     );
   }
 }

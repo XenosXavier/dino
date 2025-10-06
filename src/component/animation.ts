@@ -1,9 +1,11 @@
+import Component from "./component";
+
 export interface Frame {
   key: string;
   image: HTMLImageElement;
 }
 
-export default class Animation {
+export default class Animation implements Component {
   private readonly frameDuration = 120;
   private frames: Frame[];
   private elapsedTime: number;

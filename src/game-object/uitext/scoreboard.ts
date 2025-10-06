@@ -1,4 +1,5 @@
-import UIText, { Align } from "./uitext";
+import { Align } from "../../types/uitext";
+import UIText from "./uitext";
 
 export default class Scoreboard extends UIText {
   private currentScore: number;

@@ -1,6 +1,5 @@
 import Animation from "../../../component/animation";
 import Animator from "../../../component/animator";
-import Collider from "../../../component/collider";
 import Rigidbody, { GravityMode } from "../../../component/rigidbody";
 import StateMachine from "../../../component/state-machine";
 import Assets from "../../../resource/assets";
@@ -13,7 +12,8 @@ import DuckState from "./state/duck-state";
 import IdleState from "./state/idle-state";
 import JumpState from "./state/jump-state";
 import RunState from "./state/run-state";
-import { Rect } from "../../../types/geometry";
+import CollisionBody from "../../../component/collision-body";
+import AnimatorCollisionSource from "../../../component/animator-collision-source";
 
 export enum StateName {
   Idle = "Idle",
@@ -32,17 +32,17 @@ export enum Command {
 export default class Dino extends Sprite {
   public onDead?: (() => void) | null;
   public onGround?: (() => void) | null;
-  public rigidbody: Rigidbody;
-  public animator: Animator<StateName>;
-  public stateMachine: StateMachine<StateName, DinoState>;
-  private imageHitboxes: Record<string, Rect[]>;
+  private animator: Animator<StateName>;
+  private stateMachine: StateMachine<StateName, DinoState>;
+  private rigidbody: Rigidbody;
+  private collisionBody: CollisionBody;
 
   public constructor(assets: Assets, config: Config) {
     super();
-    this.rigidbody = new Rigidbody(this, GravityMode.None);
-    this.animator = this.createAnimator(assets);
-    this.stateMachine = this.createStateMachine();
-    this.imageHitboxes = this.createImageHitboxes(config);
+    this.addComponent((this.animator = this.createAnimator(assets)));
+    this.addComponent((this.stateMachine = this.createStateMachine()));
+    this.addComponent((this.rigidbody = this.createRigidbody()));
+    this.addComponent((this.collisionBody = this.createCollisionBody(config)));
   }
 
   public reset(): void {
@@ -58,17 +58,6 @@ export default class Dino extends Sprite {
   public handleCollision = (gameObject: GameObject): void => {
     this.stateMachine.getState().handleCollision?.(gameObject);
   };
-
-  public getBounds(): Collider {
-    return new Collider(this, 0, 0, this.width, this.height);
-  }
-
-  public getHitboxes(): Collider[] {
-    const key = this.animator.getFrame().key;
-    return this.imageHitboxes[key]!.map(
-      (box) => new Collider(this, box.x, box.y, box.width, box.height)
-    );
-  }
 
   public override update(deltaTime: number): void {
     this.animator.update(deltaTime);
@@ -117,8 +106,12 @@ export default class Dino extends Sprite {
     );
   }
 
-  private createImageHitboxes(config: Config): Record<string, Rect[]> {
-    return {
+  private createRigidbody(): Rigidbody {
+    return new Rigidbody(this, GravityMode.None);
+  }
+
+  private createCollisionBody(config: Config): CollisionBody {
+    const hitboxes = {
       "dino-idle": config.getImageHitboxes("dino-idle"),
       "dino-run1": config.getImageHitboxes("dino-run1"),
       "dino-run2": config.getImageHitboxes("dino-run2"),
@@ -127,5 +120,7 @@ export default class Dino extends Sprite {
       "dino-jump": config.getImageHitboxes("dino-jump"),
       "dino-dead": config.getImageHitboxes("dino-dead"),
     };
+    const source = new AnimatorCollisionSource(this.animator, hitboxes);
+    return new CollisionBody(this, source);
   }
 }

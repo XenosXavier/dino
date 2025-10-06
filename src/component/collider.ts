@@ -1,7 +1,8 @@
 import GameObject from "../game-object/game-object";
+import Component from "./component";
 
-export default class Collider {
-  public gameObject: GameObject;
+export default class Collider implements Component {
+  private gameObject: GameObject;
   private x: number;
   private y: number;
   private width: number;

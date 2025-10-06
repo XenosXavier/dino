@@ -1,4 +1,4 @@
-import type { UITextStyle } from "../game-object/uitext/uitext";
+import { UITextStyle } from "../types/uitext";
 
 export default class Canvas {
   private element: HTMLCanvasElement;

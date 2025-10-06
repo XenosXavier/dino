@@ -1,6 +1,7 @@
 import Animation, { Frame } from "./animation";
+import Component from "./component";
 
-export default class Animator<T extends string> {
+export default class Animator<T extends string> implements Component {
   private animations: Record<T, Animation>;
   private animation: Animation;
 

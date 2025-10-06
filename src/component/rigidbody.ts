@@ -1,4 +1,5 @@
 import GameObject from "../game-object/game-object";
+import Component from "./component";
 
 export enum GravityMode {
   None,
@@ -6,15 +7,15 @@ export enum GravityMode {
   FastFall,
 }
 
-export default class Rigidbody {
+export default class Rigidbody implements Component {
   private readonly gravityValues: Record<GravityMode, number> = {
     [GravityMode.None]: 0,
     [GravityMode.Normal]: 2300,
     [GravityMode.FastFall]: 6500,
   };
 
+  private gravityMode: GravityMode;
   private gameObject: GameObject;
-  public gravityMode: GravityMode;
   private velocityX: number;
   private velocityY: number;
 
@@ -42,5 +43,9 @@ export default class Rigidbody {
     this.velocityY += (gravity * deltaTime) / 1000;
     this.gameObject.x += (this.velocityX * deltaTime) / 1000;
     this.gameObject.y += (this.velocityY * deltaTime) / 1000;
+  }
+
+  public getGravityMode(): GravityMode {
+    return this.gravityMode;
   }
 }

@@ -1,4 +1,3 @@
-import Collider from "../../../../component/collider";
 import { State } from "../../../../component/state-machine";
 import GameObject from "../../../game-object";
 import Dino, { Command } from "../dino";

@@ -1,7 +1,7 @@
+import Rigidbody from "../component/rigidbody";
 import { SceneName } from "../core/game";
 import Dino, { Command } from "../game-object/sprite/dino/dino";
 import Track from "../game-object/sprite/ground/track";
-import Cactus from "../game-object/sprite/obstacle/cactus";
 import Curtain from "../game-object/sprite/ui/curtain";
 import Scene from "./scene";
 
@@ -25,7 +25,9 @@ export default class IdleScene extends Scene {
   public override init(): void {
     this.game.inputSystem.onKey = this.handleInput;
     this.dino.onGround = this.transition;
-    this.tracks.forEach((track) => track.rigidbody.setVelocity(0, 0));
+    this.tracks.forEach((track) =>
+      track.getComponent(Rigidbody)?.setVelocity(0, 0)
+    );
   }
 
   public override build(): void {
@@ -74,7 +76,7 @@ export default class IdleScene extends Scene {
 
   private transition = (): void => {
     this.game.inputSystem.onKey = null;
-    this.dino.rigidbody.setVelocity(52, 0);
+    this.dino.getComponent(Rigidbody)?.setVelocity(52, 0);
     this.curtain.rigidbody.setVelocity(1000, 0);
   };
 }

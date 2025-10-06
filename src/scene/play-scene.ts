@@ -1,3 +1,4 @@
+import Rigidbody from "../component/rigidbody";
 import { SceneName } from "../core/game";
 import Dino, { Command } from "../game-object/sprite/dino/dino";
 import Track from "../game-object/sprite/ground/track";
@@ -35,7 +36,9 @@ export default class PlayScene extends Scene {
     this.dino.reset();
     this.dino.onDead = this.handleGameOver;
     this.dino.onGround = null;
-    this.tracks.forEach((track) => track.rigidbody.setVelocity(-300, 0));
+    this.tracks.forEach((track) =>
+      track.getComponent(Rigidbody)?.setVelocity(-300, 0)
+    );
     this.obstacles.length = 0;
     this.scoreboard.resetCurrentScore();
   }
@@ -89,7 +92,7 @@ export default class PlayScene extends Scene {
   private spawnCactus(): void {
     const cactus = new Cactus(this.game.assets, this.game.config);
     cactus.setPosition(1000, 150);
-    cactus.rigidbody.setVelocity(-300, 0);
+    cactus.getComponent(Rigidbody)?.setVelocity(-300, 0);
     this.obstacles.push(cactus);
   }
 
@@ -97,7 +100,7 @@ export default class PlayScene extends Scene {
     const y = Math.floor(Math.random() * 3) * 20 + 100;
     const bird = new Bird(this.game.assets, this.game.config);
     bird.setPosition(1000, y);
-    bird.rigidbody.setVelocity(-400, 0);
+    bird.getComponent(Rigidbody)?.setVelocity(-400, 0);
     this.obstacles.push(bird);
   }
 

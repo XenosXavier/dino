@@ -1,3 +1,5 @@
+import Animator from "../../../../component/animator";
+import StateMachine from "../../../../component/state-machine";
 import GameObject from "../../../game-object";
 import Bird from "../../obstacle/bird";
 import Cactus from "../../obstacle/cactus";
@@ -6,20 +8,20 @@ import DinoState from "./dino-state";
 
 export default class DuckState extends DinoState {
   public override enter(): void {
-    this.dino.animator.play(StateName.Duck);
+    this.dino.getComponent(Animator)?.play(StateName.Duck);
   }
 
   public override handleCommand(command: Command): void {
     if (Command.Jump === command) {
-      this.dino.stateMachine.setState(StateName.Jump);
+      this.dino.getComponent(StateMachine)?.setState(StateName.Jump);
     } else if (Command.None === command) {
-      this.dino.stateMachine.setState(StateName.Run);
+      this.dino.getComponent(StateMachine)?.setState(StateName.Run);
     }
   }
 
   public override handleCollision(gameObject: GameObject): void {
     if (gameObject instanceof Cactus || gameObject instanceof Bird) {
-      this.dino.stateMachine.setState(StateName.Dead);
+      this.dino.getComponent(StateMachine)?.setState(StateName.Dead);
     }
   }
 }

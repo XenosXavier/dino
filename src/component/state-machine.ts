@@ -1,9 +1,13 @@
+import Component from "./component";
+
 export interface State {
   enter?(): void;
   exit?(): void;
 }
 
-export default class StateMachine<T extends string, S extends State> {
+export default class StateMachine<T extends string, S extends State>
+  implements Component
+{
   private states: Record<T, S>;
   private state!: S;
 
