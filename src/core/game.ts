@@ -10,6 +10,7 @@ import CollisionSystem from "../system/collision-system";
 import RenderSystem from "../system/render-system";
 import Canvas from "./canvas";
 import InputSystem from "../system/input-system";
+import Factory from "../resource/factory";
 
 export enum SceneName {
   Load = "Load",
@@ -24,6 +25,7 @@ export default class Game {
   public height: number;
   public assets: Assets;
   public pool: Pool;
+  public factory: Factory;
   public config: Config;
   public canvas: Canvas;
   public inputSystem: InputSystem;
@@ -37,7 +39,8 @@ export default class Game {
     this.width = width;
     this.height = height;
     this.assets = new Assets();
-    this.pool = new Pool();
+    this.pool = new Pool(this);
+    this.factory = new Factory(this);
     this.config = new Config();
     this.canvas = new Canvas(canvas, width, height);
     this.inputSystem = new InputSystem();

@@ -1,5 +1,6 @@
 import GameObject from "../game-object/game-object";
 import Component from "./component";
+import Position from "./position";
 
 export enum GravityMode {
   None,
@@ -41,8 +42,12 @@ export default class Rigidbody implements Component {
   public update(deltaTime: number): void {
     const gravity = this.gravityValues[this.gravityMode];
     this.velocityY += (gravity * deltaTime) / 1000;
-    this.gameObject.x += (this.velocityX * deltaTime) / 1000;
-    this.gameObject.y += (this.velocityY * deltaTime) / 1000;
+    this.gameObject
+      .getComponent(Position)
+      ?.move(
+        (this.velocityX * deltaTime) / 1000,
+        (this.velocityY * deltaTime) / 1000
+      );
   }
 
   public getGravityMode(): GravityMode {

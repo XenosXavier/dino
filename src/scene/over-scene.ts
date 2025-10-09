@@ -1,3 +1,4 @@
+import Position from "../component/position";
 import { SceneName } from "../core/game";
 import Dino from "../game-object/sprite/dino/dino";
 import Track from "../game-object/sprite/ground/track";
@@ -17,21 +18,12 @@ export default class OverScene extends Scene {
   private restartIcon!: RestartIcon;
 
   public override load(): void {
-    this.dino = this.game.pool.get(
-      "dino",
-      () => new Dino(this.game.assets, this.game.config)
-    );
-    this.tracks = this.game.pool.get("tracks", () => [
-      new Track(this.game.assets),
-      new Track(this.game.assets),
-    ]);
-    this.obstacles = this.game.pool.get("obstacles", () => []);
-    this.scoreboard = this.game.pool.get("scoreboard", () => new Scoreboard());
-    this.overTitle = this.game.pool.get("over-title", () => new OverTitle());
-    this.restartIcon = this.game.pool.get(
-      "restart-icon",
-      () => new RestartIcon(this.game.assets)
-    );
+    this.dino = this.game.pool.getDino();
+    this.tracks = this.game.pool.getTracks();
+    this.obstacles = this.game.pool.getObstacles();
+    this.scoreboard = this.game.pool.getScoreboard();
+    this.overTitle = this.game.pool.getOverTitle();
+    this.restartIcon = this.game.pool.getRestartIcon();
   }
 
   public override init(): void {
@@ -39,11 +31,10 @@ export default class OverScene extends Scene {
   }
 
   public override build(): void {
-    this.overTitle.setPosition(this.game.width / 2, 60);
-    this.restartIcon.setPosition(
-      (this.game.width - this.restartIcon.width) / 2,
-      115
-    );
+    this.overTitle.getComponent(Position)?.set(this.game.width / 2, 60);
+    this.restartIcon
+      .getComponent(Position)
+      ?.set((this.game.width - this.restartIcon.width) / 2, 115);
   }
 
   public override update(deltaTime: number): void {

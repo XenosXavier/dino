@@ -1,3 +1,4 @@
+import Position from "../component/position";
 import Rigidbody from "../component/rigidbody";
 import { SceneName } from "../core/game";
 import Dino, { Command } from "../game-object/sprite/dino/dino";
@@ -11,15 +12,9 @@ export default class IdleScene extends Scene {
   private curtain!: Curtain;
 
   public override load(): void {
-    this.dino = this.game.pool.get(
-      "dino",
-      () => new Dino(this.game.assets, this.game.config)
-    );
-    this.tracks = this.game.pool.get("tracks", () => [
-      new Track(this.game.assets),
-      new Track(this.game.assets),
-    ]);
-    this.curtain = this.game.pool.get("curtain", () => new Curtain(540, 150));
+    this.dino = this.game.pool.getDino();
+    this.tracks = this.game.pool.getTracks();
+    this.curtain = this.game.pool.getCurtain();
   }
 
   public override init(): void {
@@ -31,10 +26,10 @@ export default class IdleScene extends Scene {
   }
 
   public override build(): void {
-    this.dino.setPosition(0, 150);
-    this.tracks[0]?.setPosition(0, 150);
-    this.tracks[1]?.setPosition(this.tracks[1]?.width, 150);
-    this.curtain.setPosition(60, 150);
+    this.dino.getComponent(Position)?.set(0, 150);
+    this.tracks[0]?.getComponent(Position)?.set(0, 150);
+    this.tracks[1]?.getComponent(Position)?.set(this.tracks[1].width, 150);
+    this.curtain.getComponent(Position)?.set(60, 150);
   }
 
   public override update(deltaTime: number): void {

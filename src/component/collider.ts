@@ -1,5 +1,6 @@
 import GameObject from "../game-object/game-object";
 import Component from "./component";
+import Position from "./position";
 
 export default class Collider implements Component {
   private gameObject: GameObject;
@@ -23,19 +24,23 @@ export default class Collider implements Component {
   }
 
   public get left(): number {
-    return this.gameObject.x + this.x;
+    return (this.gameObject.getComponent(Position)?.x ?? 0) + this.x;
   }
 
   public get right(): number {
-    return this.gameObject.x + this.x + this.width;
+    return (
+      (this.gameObject.getComponent(Position)?.x ?? 0) + this.x + this.width
+    );
   }
 
   public get top(): number {
-    return this.gameObject.y + this.y - this.height;
+    return (
+      (this.gameObject.getComponent(Position)?.y ?? 0) + this.y - this.height
+    );
   }
 
   public get bottom(): number {
-    return this.gameObject.y + this.y;
+    return (this.gameObject.getComponent(Position)?.y ?? 0) + this.y;
   }
 
   public isCollision(other: Collider): boolean {

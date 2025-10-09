@@ -1,3 +1,4 @@
+import Position from "../component/position";
 import Rigidbody from "../component/rigidbody";
 import { SceneName } from "../core/game";
 import Dino, { Command } from "../game-object/sprite/dino/dino";
@@ -17,16 +18,10 @@ export default class PlayScene extends Scene {
   private scoreboard!: Scoreboard;
 
   public override load(): void {
-    this.dino = this.game.pool.get(
-      "dino",
-      () => new Dino(this.game.assets, this.game.config)
-    );
-    this.tracks = this.game.pool.get("tracks", () => [
-      new Track(this.game.assets),
-      new Track(this.game.assets),
-    ]);
-    this.obstacles = this.game.pool.get("obstacles", () => []);
-    this.scoreboard = this.game.pool.get("scoreboard", () => new Scoreboard());
+    this.dino = this.game.pool.getDino();
+    this.tracks = this.game.pool.getTracks();
+    this.obstacles = this.game.pool.getObstacles();
+    this.scoreboard = this.game.pool.getScoreboard();
   }
 
   public override init(): void {
@@ -44,10 +39,10 @@ export default class PlayScene extends Scene {
   }
 
   public override build(): void {
-    this.dino.setPosition(50, 150);
-    this.tracks[0]?.setPosition(0, 150);
-    this.tracks[1]?.setPosition(this.tracks[1].width, 150);
-    this.scoreboard.setPosition(this.game.width - 20, 20);
+    this.dino.getComponent(Position)?.set(50, 150);
+    this.tracks[0]?.getComponent(Position)?.set(0, 150);
+    this.tracks[1]?.getComponent(Position)?.set(this.tracks[1].width, 150);
+    this.scoreboard.getComponent(Position)?.set(this.game.width - 20, 20);
   }
 
   public override update(deltaTime: number): void {
@@ -90,16 +85,16 @@ export default class PlayScene extends Scene {
   }
 
   private spawnCactus(): void {
-    const cactus = new Cactus(this.game.assets, this.game.config);
-    cactus.setPosition(1000, 150);
+    const cactus = this.game.factory.createCactus();
+    cactus.getComponent(Position)?.set(1000, 150);
     cactus.getComponent(Rigidbody)?.setVelocity(-300, 0);
     this.obstacles.push(cactus);
   }
 
   private spawnBird(): void {
+    const bird = this.game.factory.createBird();
     const y = Math.floor(Math.random() * 3) * 20 + 100;
-    const bird = new Bird(this.game.assets, this.game.config);
-    bird.setPosition(1000, y);
+    bird.getComponent(Position)?.set(1000, y);
     bird.getComponent(Rigidbody)?.setVelocity(-400, 0);
     this.obstacles.push(bird);
   }

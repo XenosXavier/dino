@@ -46,9 +46,9 @@ export default class RenderSystem {
     this.game.canvas.drawImage(
       texture,
       sprite.x,
-      sprite.y - texture.height,
-      texture.width,
-      texture.height
+      sprite.y - sprite.height,
+      sprite.width,
+      sprite.height
     );
   }
 
