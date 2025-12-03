@@ -1,0 +1,54 @@
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+    // File Layout
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "baseUrl": "./src",
+    "paths": {
+      "@component/*": ["./component/*"],
+      "@display": ["./display"],
+      "@game-object/*": ["./game-object/*"],
+      "@manager": ["./manager"],
+      "@module/*": ["./module/*"],
+      "@resource": ["./resource"],
+      "@scene": ["./scene"],
+      "@system": ["./system"],
+      "@type/*": ["./type/*"],
+    },
+
+    // Environment Settings
+    // See also https://aka.ms/tsconfig/module
+    "module": "esnext",
+    "target": "es2017",
+    "moduleResolution": "bundler",
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Style Options
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    // Recommended Options
+    "strict": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    
+    // "esModuleInterop": true,
+  },
+  "include": ["src/**/*"]
+}
