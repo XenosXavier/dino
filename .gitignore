@@ -1,0 +1,32 @@
+# Node modules
+node_modules/
+
+# TypeScript output
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# VS Code
+.vscode/
+
+# Mac / Linux system files
+.DS_Store
+Thumbs.db
+
+# ESLint / TypeScript temporary files
+*.tsbuildinfo
+*.d.ts.map
+
+# ESLint compiled files
+*.mjs
+*.mjs.map
+*.d.mts
+*.d.mts.map
