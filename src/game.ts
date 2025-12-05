@@ -1,7 +1,12 @@
 import { Canvas } from "@display";
 import { SceneManager } from "@manager";
 import { IdleScene, LoadScene, OverScene, PlayScene } from "@scene";
-import { CollisionSystem, InputSystem, RenderSystem } from "@system";
+import {
+  CollisionSystem,
+  DebugSystem,
+  InputSystem,
+  RenderSystem,
+} from "@system";
 
 export enum SceneName {
   Load = "load",
@@ -15,6 +20,7 @@ export default class Game {
   public readonly inputSystem: InputSystem;
   public readonly renderSystem: RenderSystem;
   public readonly collisionSystem: CollisionSystem;
+  public readonly debugSystem: DebugSystem;
   public readonly sceneManager: SceneManager<SceneName>;
   private time;
 
@@ -23,6 +29,7 @@ export default class Game {
     this.inputSystem = new InputSystem();
     this.renderSystem = new RenderSystem();
     this.collisionSystem = new CollisionSystem();
+    this.debugSystem = new DebugSystem();
     this.sceneManager = this.createSceneManager();
     this.time = 0;
   }
