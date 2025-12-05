@@ -38,14 +38,17 @@ export default class OverScene extends Scene {
 
   public override update(_deltaTime: number): void {
     this.renderGameObjects();
+    this.debugGameObjects();
   }
 
-  private handleInput = (event: KeyboardEvent): void => {
+  private handleInput = (e: KeyboardEvent): void => {
+    if ("F4" === e.code && "keydown" === e.type) {
+      this.game.debugSystem.isEnabled = !this.game.debugSystem.isEnabled;
+    }
+
     if (
-      (event.code === "Space" ||
-        event.code === "ArrowDown" ||
-        event.code === "ArrowUp") &&
-      event.type === "keyup"
+      (e.code === "Space" || e.code === "ArrowDown" || e.code === "ArrowUp") &&
+      e.type === "keyup"
     )
       this.game.sceneManager.setScene(SceneName.Play);
   };
@@ -60,6 +63,13 @@ export default class OverScene extends Scene {
         this.gameOverText,
         this.restartIcon,
       ],
+      this.game.canvas,
+    );
+  }
+
+  private debugGameObjects(): void {
+    this.game.debugSystem.renderColliders(
+      [...this.tracks, ...this.obstacles, this.dino],
       this.game.canvas,
     );
   }

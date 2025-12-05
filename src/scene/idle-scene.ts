@@ -37,9 +37,14 @@ export default class IdleScene extends Scene {
     this.updateGameObjects(deltaTime);
     this.checkCollisions();
     this.renderGameObjects();
+    this.debugGameObjects();
   }
 
   private handleInput = (e: KeyboardEvent): void => {
+    if ("F4" === e.code && "keydown" === e.type) {
+      this.game.debugSystem.isEnabled = !this.game.debugSystem.isEnabled;
+    }
+
     if (("Space" === e.code || "ArrowUp" === e.code) && "keydown" === e.type) {
       this.dino.handleCommand(DinoCommand.Jump);
     }
@@ -69,6 +74,13 @@ export default class IdleScene extends Scene {
   private renderGameObjects(): void {
     this.game.renderSystem.render(
       [...this.tracks, this.curtain, this.dino],
+      this.game.canvas,
+    );
+  }
+
+  private debugGameObjects(): void {
+    this.game.debugSystem.renderColliders(
+      [...this.tracks, this.dino],
       this.game.canvas,
     );
   }

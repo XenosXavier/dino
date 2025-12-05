@@ -50,9 +50,14 @@ export default class PlayScene extends Scene {
     this.updateGameObjects(deltaTime * this.speed);
     this.checkCollisions();
     this.renderGameObjects();
+    this.debugGameObjects();
   }
 
   private handleInput = (e: KeyboardEvent): void => {
+    if ("F4" === e.code && "keydown" === e.type) {
+      this.game.debugSystem.isEnabled = !this.game.debugSystem.isEnabled;
+    }
+
     if ((e.code === "Space" || e.code === "ArrowUp") && e.type === "keydown") {
       this.dino.handleCommand(DinoCommand.Jump);
     } else if (e.code === "ArrowDown" && e.type === "keydown") {
@@ -89,6 +94,13 @@ export default class PlayScene extends Scene {
   private renderGameObjects(): void {
     this.game.renderSystem.render(
       [...this.tracks, ...this.obstacles, this.dino, this.scoreboard],
+      this.game.canvas,
+    );
+  }
+
+  private debugGameObjects(): void {
+    this.game.debugSystem.renderColliders(
+      [...this.tracks, ...this.obstacles, this.dino],
       this.game.canvas,
     );
   }

@@ -43,4 +43,15 @@ export default class Canvas {
     this.context.textAlign = style.align;
     this.context.fillText(text, x, y);
   }
+
+  public drawRect(
+    color: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) {
+    this.context.strokeStyle = color;
+    this.context.strokeRect(x, y, width, height);
+  }
 }

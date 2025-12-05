@@ -1,5 +1,6 @@
 import CollisionSystem from "./collision-system";
+import DebugSystem from "./debug-system";
 import InputSystem from "./input-system";
 import RenderSystem from "./render-system";
 
-export { CollisionSystem, InputSystem, RenderSystem };
+export { CollisionSystem, DebugSystem, InputSystem, RenderSystem };
